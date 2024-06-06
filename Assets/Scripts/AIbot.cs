@@ -23,25 +23,26 @@ public class AIBot : MonoBehaviour
     private IEnumerator AITakeTurn()
     {
         yield return new WaitForSeconds(2f);
-
         int selectedColumn = AIMove();
-
         if (selectedColumn != -1)
         {
             for (int row = 0; row < gridManager.rows; row++)
             {
                 GameObject targetCell = gridManager.GetCell(selectedColumn, row);
-
                 if (targetCell != null && targetCell.transform.childCount == 0)
                 {
                     gameManager.PlaceToken(targetCell);
-                    
-                    break;
+                    // No need for a break here as PlaceToken handles the game state transition
+                    break; // Added a break here to ensure only one token is placed
                 }
             }
         }
+        else
+        {
+            // No valid move for the AI, transition to PlayerTurn
+            gameManager.currentGameState = GameState.PlayerTurn;
+        }
     }
-
     private int AIMove()
     {
         // Prioritize winning move for AI

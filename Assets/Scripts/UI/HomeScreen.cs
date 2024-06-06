@@ -14,7 +14,7 @@ public class HomeScreen : BaseScreen
     public override void ActivateScreen()
     {
         base.ActivateScreen();
-        GameManager.isInputOn = false;
+        GameManager.instance.isInputOn = false;
     }
 
     void OnPlay()

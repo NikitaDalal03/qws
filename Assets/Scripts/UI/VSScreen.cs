@@ -23,7 +23,7 @@ public class VSScreen : BaseScreen
     public override void ActivateScreen()
     {
         base.ActivateScreen();
-        GameManager.isInputOn = false;
+        GameManager.instance.isInputOn = false;
     }
 
     void OnAI()

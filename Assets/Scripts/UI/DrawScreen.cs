@@ -18,7 +18,7 @@ public class GameOverScreen : BaseScreen
     public override void ActivateScreen()
     {
         base.ActivateScreen();
-        GameManager.isInputOn = false;
+        GameManager.instance.isInputOn = false;
     }
 
     public override void DeActivateScreen()

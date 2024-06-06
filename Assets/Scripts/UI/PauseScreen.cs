@@ -21,12 +21,13 @@ public class PauseScreen : BaseScreen
     public override void ActivateScreen()
     {
         base.ActivateScreen();
-        GameManager.isInputOn = false;
+        GameManager.instance.isInputOn = false;
     }
 
   
     void OnRestart()
     {
+        Time.timeScale = 1;
         SoundManager.inst.PlaySound(SoundName.BtnClick);
         UIManager.instance.SwitchScreen(GameScreens.Play);
         GameManager.instance.RestartGame();
@@ -34,6 +35,7 @@ public class PauseScreen : BaseScreen
 
     void OnQuit()
     {
+        Time.timeScale = 1;
         SoundManager.inst.PlaySound(SoundName.BtnClick);
         UIManager.instance.SwitchScreen(GameScreens.Home);
         GameManager.instance.RestartGame();
@@ -41,6 +43,7 @@ public class PauseScreen : BaseScreen
 
     void OnExit()
     {
+        Time.timeScale = 1;
         SoundManager.inst.PlaySound(SoundName.BtnClick);
         UIManager.instance.SwitchScreen(GameScreens.Play);
     }

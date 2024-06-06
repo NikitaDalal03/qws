@@ -137,7 +137,9 @@ public class WinChecker : MonoBehaviour
             int y = startY + i * dirY;
 
             if (x < 0 || x >= columns || y < 0 || y >= rows)
+            {
                 break;
+            }
 
             if (grid[x, y] == player)
             {
@@ -155,7 +157,9 @@ public class WinChecker : MonoBehaviour
             int y = startY - i * dirY;
 
             if (x < 0 || x >= columns || y < 0 || y >= rows)
+            {
                 break;
+            }
 
             if (grid[x, y] == player)
             {
@@ -163,7 +167,9 @@ public class WinChecker : MonoBehaviour
                 cells.Add(new Vector2Int(x, y));
             }
             else
+            {
                 break;
+            }
         }
 
         if (count >= 4)

@@ -80,17 +80,19 @@ public class PlayScreen : BaseScreen
 
     private void OnPause()
     {
-        isPause = !isPause;
+
+       // isPause = !isPause;
         SoundManager.inst.PlaySound(SoundName.BtnClick);
-        if (isPause)
-        {
+        //if (isPause)
+        //{
             UIManager.instance.SwitchScreen(GameScreens.Pause);
-            pauseBtnImage.sprite = pauseOffButoon;
-        }
-        else
-        {
-            pauseBtnImage.sprite = pauseOnButton;
-        }
+         //   pauseBtnImage.sprite = pauseOffButoon;
+        //}
+        //else
+        //{
+        //    pauseBtnImage.sprite = pauseOnButton;
+        //}
+        Time.timeScale = 0;
     }
 
 
@@ -98,7 +100,7 @@ public class PlayScreen : BaseScreen
     public override void ActivateScreen()
     {
         base.ActivateScreen();
-        GameManager.isInputOn = true;
+        GameManager.instance.isInputOn = true;
     }
 }
 

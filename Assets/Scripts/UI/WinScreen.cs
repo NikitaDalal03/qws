@@ -43,7 +43,7 @@ public class WinScreen : BaseScreen
     public override void ActivateScreen()
     {
         base.ActivateScreen();
-        GameManager.isInputOn = false;
+        GameManager.instance.isInputOn = false;
     }
 
 }

@@ -269,6 +269,7 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] private WinChecker winChecker;
     [SerializeField] private GridManager gridManager;
+    [SerializeField] private PlayersNameScreen playerName;
 
     public GameObject player1TurnPanel;
     public GameObject player2TurnPanel;
@@ -276,7 +277,7 @@ public class GameManager : MonoBehaviour
     public LineRenderer lineRenderer;
 
     private bool isGameOver = false;
-    public static bool isInputOn;
+    public bool isInputOn;
 
     public int currentPlayer = 0;
     private int totalMoves = 0;
@@ -287,9 +288,13 @@ public class GameManager : MonoBehaviour
     public GameObject playerIndicatorPrefab;
     private GameObject playerIndicator;
     private float indicatorHeight = 0.03f;
-
+    public GameState currentGameState = GameState.Initializing;
     private bool canTakeTurn = true;
 
+
+   
+    public string player1Name = "Player 1";
+    public string player2Name = "Player 2";
     private void Awake()
     {
         if (instance == null)
@@ -319,44 +324,65 @@ public class GameManager : MonoBehaviour
         UpdateIndicatorPosition(Camera.main.ScreenToWorldPoint(Input.mousePosition));
 
         aiBot = gameObject.GetComponent<AIBot>();
+      
     }
 
     void Update()
     {
-        if (isGameOver || !isInputOn)
+        if (isGameOver)
             return;
 
-        if (currentPlayer == 1 && isAgainstAI && canTakeTurn)
+        switch (currentGameState)
         {
-            canTakeTurn = false;
-            aiBot.TakeTurn();
+            case GameState.PlayerTurn:
+                HandlePlayerInput();
+                break;
+            case GameState.AITurn:
+                HandleAITurn();
+                break;
+            case GameState.CheckingWin:
+                
+                break;
+            default:
+                break;
+        }
+    }
+    private void HandlePlayerInput()
+    {
+        if (!isInputOn)
+        {
             return;
         }
 
-        if (!isAgainstAI || currentPlayer == 0)
+        Vector2 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        RaycastHit2D hit = Physics2D.Raycast(mousePosition, Vector2.zero);
+
+        bool isMouseAboveBoard = (hit.collider != null && (hit.collider.CompareTag("cell"))); //|| hit.collider.CompareTag("token")));
+        playerIndicator.SetActive(isMouseAboveBoard);
+
+        if (isMouseAboveBoard && isInputOn)
         {
-            Vector2 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            RaycastHit2D hit = Physics2D.Raycast(mousePosition, Vector2.zero);
+            UpdateIndicatorPosition(mousePosition);
+        }
 
-            bool isMouseAboveBoard = (hit.collider != null && hit.collider.CompareTag("cell"));
-            playerIndicator.SetActive(isMouseAboveBoard);
-
-            if (isMouseAboveBoard && isInputOn)
+        if (Input.GetMouseButtonDown(0) && isMouseAboveBoard)
+        {
+            Debug.Log("Check Mouse Input");
+            if (hit.collider != null)
             {
-                UpdateIndicatorPosition(mousePosition);
-            }
-
-            if (Input.GetMouseButtonDown(0) && isMouseAboveBoard)
-            {
-                if (hit.collider != null)
-                {
-                    PlaceToken(hit.collider.gameObject);
-                    canTakeTurn = true;
-                }
+                Debug.Log("Hit Collider");
+                if(hit.collider.CompareTag("cell")) //|| hit.collider.CompareTag("token"))
+                PlaceToken(hit.collider.gameObject);
             }
         }
     }
 
+    private void HandleAITurn()
+    {
+        canTakeTurn = false;
+        aiBot.TakeTurn();
+        currentGameState = GameState.CheckingWin;
+    }
     public void PlaceToken(GameObject cell)
     {
         Vector2Int cellIndex = GetCellIndex(cell);
@@ -364,6 +390,7 @@ public class GameManager : MonoBehaviour
         if (cellIndex.x != -1 && cellIndex.y != -1)
         {
             int column = cellIndex.x;
+            bool isCellEmpty = false;
 
             for (int row = 0; row < gridManager.rows; row++)
             {
@@ -371,9 +398,12 @@ public class GameManager : MonoBehaviour
 
                 if (targetCell != null && targetCell.transform.childCount == 0)
                 {
+                    isCellEmpty = true;
+
                     Vector3 startPosition = new Vector3(targetCell.transform.position.x, gridManager.rows, targetCell.transform.position.z);
                     GameObject token = Instantiate(playerTokens[currentPlayer], startPosition, Quaternion.identity, targetCell.transform);
                     tokenList.Add(token);
+                  
 
                     MoveTokenWithDOTween(token, targetCell.transform.position);
                     SoundManager.inst.PlaySound(SoundName.Ball);
@@ -381,25 +411,43 @@ public class GameManager : MonoBehaviour
                     winChecker.UpdateGrid(column, row, currentPlayer + 1);
                     totalMoves++;
 
-                    if (winChecker.CheckForWinFromCell(column, row, currentPlayer + 1))
+                    bool isWinningMove = winChecker.CheckForWinFromCell(column, row, currentPlayer + 1);
+                    if (isWinningMove)
                     {
                         HighlightWinningCells(winChecker.GetWinningCells(), currentPlayer + 1);
                         StartCoroutine(HandleWin(currentPlayer));
                         isGameOver = true;
+                        currentGameState = GameState.GameOver;
                     }
                     else if (totalMoves >= gridManager.columns * gridManager.rows)
                     {
                         StartCoroutine(HandleDraw());
                         isGameOver = true;
+                        currentGameState = GameState.GameOver;
                     }
                     else
                     {
                         currentPlayer = (currentPlayer + 1) % playerTokens.Length;
                         HighlightCurrentPlayer();
                         UpdatePlayerIndicator();
+
+                        if (currentPlayer == 1 && isAgainstAI)
+                        {
+                            currentGameState = GameState.AITurn;
+                        }
+                        else
+                        {
+                            currentGameState = GameState.PlayerTurn;
+                        }
                     }
                     break;
                 }
+            }
+
+            if (!isCellEmpty)
+            {
+                //cell already occupied
+                return;
             }
         }
     }
@@ -502,6 +550,7 @@ public class GameManager : MonoBehaviour
         {
             Vector2Int cellPos = winningCells[i];
             GameObject cell = gridManager.GetCell(cellPos.x, cellPos.y);
+         
             if (cell != null)
             {
                 Vector3 cellPosition = cell.transform.position;
@@ -521,6 +570,7 @@ public class GameManager : MonoBehaviour
         for (int i = 1; i < positions.Length; i++)
         {
             Vector3 startPosition = positions[i - 1];
+
             Vector3 endPosition = positions[i];
 
             yield return DOTween.To(() => startPosition, x => UpdateLineSegment(i, x), endPosition, segmentDuration)
@@ -543,7 +593,9 @@ public class GameManager : MonoBehaviour
         currentPlayer = 0;
         HighlightCurrentPlayer();
         UpdatePlayerIndicator();
+        playerName.Reset();
     }
+
 
     private void ClearTokenList()
     {
@@ -554,10 +606,12 @@ public class GameManager : MonoBehaviour
         tokenList.Clear();
     }
 
+
     void UpdateIndicatorPosition(Vector2 mousePosition)
     {
         playerIndicator.transform.position = new Vector3(mousePosition.x, gridManager.rows + indicatorHeight, playerIndicator.transform.position.z);
     }
+
 
     void UpdatePlayerIndicator()
     {
@@ -565,9 +619,11 @@ public class GameManager : MonoBehaviour
         spriteRenderer.sprite = playerTokens[currentPlayer].GetComponent<SpriteRenderer>().sprite;
     }
 
+
     public void SetGameMode(bool againstAI)
     {
         isAgainstAI = againstAI;
+        currentGameState = GameState.PlayerTurn;
     }
 }
 
