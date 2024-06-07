@@ -28,6 +28,7 @@ public class PauseScreen : BaseScreen
     void OnRestart()
     {
         Time.timeScale = 1;
+        GameManager.instance.currentGameState = GameState.PlayerTurn;
         SoundManager.inst.PlaySound(SoundName.BtnClick);
         UIManager.instance.SwitchScreen(GameScreens.Play);
         GameManager.instance.RestartGame();

@@ -28,19 +28,26 @@ public class PlayersNameScreen : BaseScreen
         player1NameText.text = player1Name;
         player2NameText.text = player2Name;
     }
+
     private void UpdatePlayerNameText()
     {
         player1NameText.text = player1Name;
         player2NameText.text = player2Name;
     }
+
     void OnSubmit()
     {
-
-        player1NameText.text = player1NameInput.text + "1's Turn";
-        player2NameText.text = player2NameInput.text + "2's Turn";
-        SoundManager.inst.PlaySound(SoundName.BtnClick);
-        UIManager.instance.SwitchScreen(GameScreens.Play);
-
+        if (player1NameInput.text != string.Empty && player2NameInput.text != string.Empty)
+        {
+            player1NameText.text = player1NameInput.text + "1's Turn";
+            player2NameText.text = player2NameInput.text + "2's Turn";
+            SoundManager.inst.PlaySound(SoundName.BtnClick);
+            UIManager.instance.SwitchScreen(GameScreens.Play);
+        }
+        else
+        {
+            Debug.Log("Enter players name");
+        }
     }
 
     void OnBack()

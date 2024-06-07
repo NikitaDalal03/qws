@@ -28,6 +28,7 @@ public class GameOverScreen : BaseScreen
 
     void OnRetry()
     {
+        GameManager.instance.currentGameState = GameState.PlayerTurn;
         SoundManager.inst.PlaySound(SoundName.BtnClick);
         UIManager.instance.SwitchScreen(GameScreens.Play);
         GameManager.instance.RestartGame();

@@ -23,7 +23,7 @@ public class PlayScreen : BaseScreen
 
     bool isMusicOn = true;
     bool isSoundOn = true;
-    bool isPause = false;
+   
 
     private void Start()
     {
@@ -76,22 +76,15 @@ public class PlayScreen : BaseScreen
     {
         SoundManager.inst.PlaySound(SoundName.BtnClick);
         UIManager.instance.SwitchScreen(GameScreens.Info);
+
+        Time.timeScale = 0;
     }
 
     private void OnPause()
     {
-
-       // isPause = !isPause;
         SoundManager.inst.PlaySound(SoundName.BtnClick);
-        //if (isPause)
-        //{
-            UIManager.instance.SwitchScreen(GameScreens.Pause);
-         //   pauseBtnImage.sprite = pauseOffButoon;
-        //}
-        //else
-        //{
-        //    pauseBtnImage.sprite = pauseOnButton;
-        //}
+        UIManager.instance.SwitchScreen(GameScreens.Pause);
+        
         Time.timeScale = 0;
     }
 

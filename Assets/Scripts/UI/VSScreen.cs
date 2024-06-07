@@ -36,7 +36,6 @@ public class VSScreen : BaseScreen
     void OnPlayer()
     {
         SoundManager.inst.PlaySound(SoundName.BtnClick);
-        //gameManager.SetGameMode(false);
         UIManager.instance.SwitchScreen(GameScreens.Names);
         gameManager.SetGameMode(false);
     }

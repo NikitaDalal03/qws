@@ -19,6 +19,7 @@ public class InfoScreen : BaseScreen
 
     void OnExit()
     {
+        Time.timeScale = 1;
         SoundManager.inst.PlaySound(SoundName.BtnClick);
         UIManager.instance.SwitchScreen(GameScreens.Play);
     }

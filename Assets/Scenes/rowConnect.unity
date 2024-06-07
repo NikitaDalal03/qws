@@ -2093,6 +2093,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 1636972935}
   - {fileID: 1792667751}
   - {fileID: 905699775}
   m_Father: {fileID: 0}
@@ -7677,7 +7678,7 @@ GameObject:
   - component: {fileID: 1636972936}
   - component: {fileID: 1636972937}
   m_Layer: 0
-  m_Name: Grid
+  m_Name: GameManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7722,12 +7723,13 @@ MonoBehaviour:
   player1TurnPanel: {fileID: 1508380337}
   player2TurnPanel: {fileID: 520293212}
   lineRenderer: {fileID: 428277532}
+  isInputOn: 0
   currentPlayer: 0
   isAgainstAI: 0
   playerIndicatorPrefab: {fileID: 8120216952861310166, guid: 5db0bbaabde2426478e2fe78fa236191, type: 3}
   currentGameState: 0
-  player1Name: PLAYER1'S TURN
-  player2Name: PLAYER2'S TURN
+  player1Name: Player1
+  player2Name: Player2
 --- !u!224 &1636972935
 RectTransform:
   m_ObjectHideFlags: 0
@@ -7735,12 +7737,12 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1636972930}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 1.3133136}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 381627773}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -10778,7 +10780,6 @@ SceneRoots:
   m_Roots:
   - {fileID: 519420032}
   - {fileID: 1550055464}
-  - {fileID: 1636972935}
   - {fileID: 507609118}
   - {fileID: 381627773}
   - {fileID: 428277533}

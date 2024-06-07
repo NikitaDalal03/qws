@@ -21,6 +21,7 @@ public class WinScreen : BaseScreen
  
     void OnRestart()
     {
+        GameManager.instance.currentGameState = GameState.PlayerTurn;
         SoundManager.inst.PlaySound(SoundName.BtnClick);
         UIManager.instance.SwitchScreen(GameScreens.Play);
         GameManager.instance.RestartGame();
@@ -28,6 +29,7 @@ public class WinScreen : BaseScreen
 
     void OnHome()
     {
+        //GameManager.instance.currentGameState = GameState.PlayerTurn;
         SoundManager.inst.PlaySound(SoundName.BtnClick);
         UIManager.instance.SwitchScreen(GameScreens.Home);
         GameManager.instance.RestartGame();
