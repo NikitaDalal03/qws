@@ -72,21 +72,18 @@ public class AIBot : MonoBehaviour
     {
         for (int col = 0; col < gridManager.columns; col++)
         {
-            for (int row = 0; row < gridManager.rows; row++)
+            for (int row = gridManager.rows - 1; row >= 0; row--)
             {
                 if (gridManager.GetCell(col, row).transform.childCount == 0)
                 {
                     winChecker.UpdateGrid(col, row, player);
-                    
+
                     bool isWinningMove = winChecker.CheckForWinFromCell(col, row, player);
                     // Reset the cell
                     winChecker.UpdateGrid(col, row, 0);
-                    
 
                     if (isWinningMove)
                         return col;
-                    //check lowest empty cell in column
-                    break;
                 }
             }
         }
@@ -102,6 +99,7 @@ public class AIBot : MonoBehaviour
         {
             if (gridManager.GetCell(col, 0).transform.childCount == 0)
             {
+                Debug.Log("Adding Columns");
                 validColumns.Add(col);              
             }          
         }
@@ -113,6 +111,8 @@ public class AIBot : MonoBehaviour
         return -1;
     }
 }
+
+
 
 
 
